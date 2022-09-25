@@ -2,15 +2,9 @@ const db = require('../models');
 const Category = db.Category;
 exports.create = function (req, res) {
 
-    const { name, description } = req.body;
-    //console.log(req.body);
-    if (!name) {
-        res.status(400).send({ message: "Name cannot be empty" });
-    }
-
     const category = {
-        name: name,
-        description: description
+        name: req.body.name,
+        description: req.body.description
     }
 
     Category.create(category)
@@ -72,27 +66,15 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
 
     const categoryId = req.params.id;
-
-    Category.findByPk(categoryId)
-        .then((category) => {
-            if (!category) {
-                res.status(400).send({ message: `Category with id ${categoryId} not exists in database` });
-            }
-            Category.destroy({
-                where: {
-                    id: categoryId
-                }
-            })
-                .then((data) => {
-                    res.status(201).send({message:"Successfully deleted"});
-                })
-                .catch((err) => {
-                    res.status(500).send({ message: 'Something went wrong with server' });
-                })
-        })
-        .catch((err) => {
-            res.status(500).send({ message: 'Something went wrong with server' });
-        })
-
-    
+    Category.destroy({
+        where: {
+            id: categoryId
+        }
+    })
+    .then((data) => {
+        res.status(201).send({ message: "Successfully deleted" });
+    })
+    .catch((err) => {
+        res.status(500).send({ message: 'Something went wrong with server' });
+    })
 }
