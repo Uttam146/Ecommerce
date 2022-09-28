@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 const db = require('./models/index');
 
 
-db.sequelize.sync({force:false})
+db.sequelize.sync({force:true})
 .then(()=>{
     console.log('DB is connected');
 })
@@ -21,6 +21,7 @@ db.sequelize.sync({force:false})
 //imported category route
 require('./routes/category.route')(app);
 require('./routes/product.route')(app);
+require('./routes/auth.routes')(app);
 
 app.listen(process.env.PORT,()=>{
     console.log(`Application is running on port ${process.env.PORT}`);

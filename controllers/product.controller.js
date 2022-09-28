@@ -1,5 +1,5 @@
 const { Product, Category } = require('../models');
-
+const { Op } = require("sequelize");
 exports.create = function (req, res) {
     const { name, description, cost, categoryId } = req.body;
     const product = {
@@ -17,8 +17,22 @@ exports.create = function (req, res) {
         })
 }
 
+
 exports.getAll = (req, res) => {
-    Product.findAll()
+    let productpromise = null;
+
+    console.log(req.query.minCost, req.query.maxCost);
+    if(req.query.minCost)
+    {productpromise = Product.findAll({where:{
+        cost:{
+        [Op.between]: [req.query.minCost, req.query.maxCost]},
+    }})
+    }else{
+        productpromise = Product.findAll();
+    }
+
+
+         productpromise
         .then((product) => {
             res.status(201).send(product);
         })
