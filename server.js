@@ -22,7 +22,7 @@ db.sequelize.sync({force:false})
 //imported category route
 require('./routes/category.route')(app);
 require('./routes/product.route')(app);
-require('./routes/auth.routes')(app);
+require('./routes/auth.route')(app);
 require('./routes/user.route')(app);
 
 app.listen(process.env.PORT,()=>{

@@ -1,5 +1,5 @@
-const { Product, Category } = require('../models');
-const { Op } = require("sequelize");
+const { Product, Category, Sequelize } = require('../models');
+const {Op} = Sequelize;
 exports.create = function (req, res) {
     const { name, description, cost, categoryId } = req.body;
     const product = {
@@ -19,26 +19,54 @@ exports.create = function (req, res) {
 
 
 exports.getAll = (req, res) => {
+    const { name, minCost, maxCost } = req.query;
+    console.log(minCost,maxCost);
     let productpromise = null;
-
-    console.log(req.query.minCost, req.query.maxCost);
-    if(req.query.minCost)
-    {productpromise = Product.findAll({where:{
-        cost:{
-        [Op.between]: [req.query.minCost, req.query.maxCost]},
-    }})
-    }else{
-        productpromise = Product.findAll();
+    if (name) {
+        productpromise = Product.findAll({
+            where: {
+                name: name
+            }
+        })
     }
 
-
-         productpromise
-        .then((product) => {
-            res.status(201).send(product);
+    else if (minCost && maxCost) {
+        productpromise = Product.findAll({
+            where: {
+                cost: {
+                    [Op.between]: [minCost, maxCost]
+                },
+            }
         })
-        .catch((err) => {
-            res.status(500).send({ message: 'Something went wrong with server' });
+    } 
+    else if (minCost) {
+        productpromise = Product.findAll({
+            where: {
+                cost: {
+                    [Op.gte]: minCost
+                },
+            }
         })
+    }
+    else if (maxCost) {
+        productpromise = Product.findAll({
+            where: {
+                cost: {
+                    [Op.lte]: maxCost
+                },
+            }
+        })
+    }
+    else{
+    productpromise  = Product.findAll();
+    }
+    productpromise
+    .then(products =>{
+        res.send(products);
+    })
+    .catch((err) => {
+    res.status(500).send({ message: err.message || 'Something went wrong with server' });
+    })
 }
 exports.getOne = (req, res) => {
     const productId = req.params.id;
@@ -98,33 +126,33 @@ exports.delete = (req, res) => {
 
 exports.findProductsbyCategoryId = (req, res) => {
     const categoryId = req.params.categoryId;
-   
-            Product.findAll({
-                where: {
-                    categoryId: categoryId
-                }
-            })
-                .then((product) => {
-                    res.status(201).send(product);
-                })
-                .catch((err) => {
-                    res.status(500).send({ message: `Something went wrong ${err.message}` });
-                })
+
+    Product.findAll({
+        where: {
+            categoryId: categoryId
+        }
+    })
+        .then((product) => {
+            res.status(201).send(product);
+        })
+        .catch((err) => {
+            res.status(500).send({ message: `Something went wrong ${err.message}` });
+        })
 }
 
 exports.findSpecificProductbyCategoryId = (req, res) => {
     const categoryId = req.params.categoryId;
     const productId = req.params.productId;
-            Product.findAll({
-                where: {
-                    categoryId: categoryId,
-                    id: productId
-                }
-            })
-                .then((product) => {
-                    res.status(201).send(product);
-                })
-                .catch((err) => {
-                    res.status(500).send({ message: `Something went wrong ${err.message}` });
-                })
+    Product.findAll({
+        where: {
+            categoryId: categoryId,
+            id: productId
+        }
+    })
+        .then((product) => {
+            res.status(201).send(product);
+        })
+        .catch((err) => {
+            res.status(500).send({ message: `Something went wrong ${err.message}` });
+        })
 }
