@@ -1,5 +1,6 @@
 const { Users, Role, Sequelize, ROLES } = require('../models');
 const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 exports.signup = async (req, res) => {
 
     var { username, email, password, roles } = req.body;
@@ -26,7 +27,7 @@ exports.signIn = async (req, res) => {
     try {
         var user = await Users.findOne({ where: { username: username } })
     } catch (err) {
-        res.status(500).send({ message:err.message});
+        res.status(500).send({ message:"heello"});
     }
     if(!user){
         res.status(400).send({ message: "user not found" });
@@ -35,10 +36,18 @@ exports.signIn = async (req, res) => {
     if (!isPasswordValid) {
         res.status(401).send({ message: "Invalid Password" });
     }
+    const token = jwt.sign({id:user.id},process.env.SECRET_KEY,{expiresIn:21600})
+    var roles = [];
+    const allRoles = await user.getRoles();
+    allRoles.forEach(role=>{
+        roles.push(role.name);
+    })
+    //console.log(allRoles[0].name);
     res.send({
         id: user.id,
         username: user.username,
         email: user.email,
-        roles: user.roles
+        roles: roles,
+        accesToken:token
     })
 }

@@ -18,7 +18,6 @@ db.sequelize.sync({force:false})
 })
 //above code is used to start the server
 
-
 //imported category route
 require('./routes/category.route')(app);
 require('./routes/product.route')(app);

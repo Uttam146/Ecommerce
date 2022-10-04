@@ -1,7 +1,11 @@
 const db = require('../models');
 const Category = db.Category;
 exports.create = function (req, res) {
-
+    
+    if(!req.allPermission){
+        console.log("hello");
+        res.status(403).send({message:"Only superadmin is allowed to add/update/delete the cateory"})
+    }
     const category = {
         name: req.body.name,
         description: req.body.description
@@ -42,6 +46,11 @@ exports.getOne = (req, res) => {
 }
 
 exports.update = (req, res) => {
+
+    if(!req.allPermission){
+        console.log("hello");
+        res.status(403).send({message:"Only superadmin is allowed to add/update/delete the cateory"})
+    }
     const categoryId = req.params.id;
     const { name, description } = req.body;
     const category = {};
@@ -65,6 +74,10 @@ exports.update = (req, res) => {
 
 exports.delete = (req, res) => {
 
+    if(!req.allPermission){
+        console.log("hello");
+        res.status(403).send({message:"Only superadmin is allowed to add/update/delete the cateory"})
+    }
     const categoryId = req.params.id;
     Category.destroy({
         where: {

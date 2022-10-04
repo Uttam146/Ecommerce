@@ -34,14 +34,18 @@ db.Category.hasMany(db.Product,{
 db.Product.belongsTo(db.Category);
 
 db.Role.belongsToMany(db.Users,{
-    through:'userRoles'
+    through:'userRoles',
+    foreignKey:'roleId',
+    otherKey:'userId'
 })
 
 db.Users.belongsToMany(db.Role,{
-    through:'userRoles'
+    through:'userRoles',
+    foreignKey:'userId',
+    otherKey:'roleId'
 })
 
-db.ROLES = ['admin','superadmin','agent'];
+db.ROLES = ['user','admin','superadmin','agent'];
 
 
 module.exports = db;

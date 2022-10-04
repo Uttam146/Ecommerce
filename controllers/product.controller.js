@@ -1,13 +1,14 @@
 const { Product, Category, Sequelize } = require('../models');
 const {Op} = Sequelize;
 exports.create = function (req, res) {
-    const { name, description, cost, categoryId } = req.body;
-    const product = {
-        name,
-        description,
-        cost,
-        categoryId
+
+    if(!req.allPermission){
+        console.log("hello");
+        res.status(403).send({message:"Only superadmin is allowed to add/update/delete the product"})
     }
+    
+    const { name, description, cost, categoryId } = req.body;
+    const product = {name,description,cost,categoryId};
     Product.create(product)
         .then(product => {
             res.status(201).send(product);
@@ -19,8 +20,8 @@ exports.create = function (req, res) {
 
 
 exports.getAll = (req, res) => {
+    console.log(req.user);
     const { name, minCost, maxCost } = req.query;
-    console.log(minCost,maxCost);
     let productpromise = null;
     if (name) {
         productpromise = Product.findAll({
@@ -84,6 +85,10 @@ exports.getOne = (req, res) => {
 }
 
 exports.update = (req, res) => {
+    if(!req.allPermission){
+        console.log("hello");
+        res.status(403).send({message:"Only superadmin is allowed to add/update/delete the product"})
+    }
     const productId = req.params.id;
     const { name, description, cost } = req.body;
     const product = {};
@@ -109,7 +114,10 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-
+    if(!req.allPermission){
+        console.log("hello");
+        res.status(403).send({message:"Only superadmin is allowed to add/update/delete the product"})
+    }
     const productId = req.params.id;
     Product.destroy({
         where: {
