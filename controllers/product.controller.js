@@ -3,7 +3,6 @@ const {Op} = Sequelize;
 exports.create = function (req, res) {
 
     if(!req.allPermission){
-        console.log("hello");
         res.status(403).send({message:"Only superadmin is allowed to add/update/delete the product"})
     }
     
@@ -86,7 +85,6 @@ exports.getOne = (req, res) => {
 
 exports.update = (req, res) => {
     if(!req.allPermission){
-        console.log("hello");
         res.status(403).send({message:"Only superadmin is allowed to add/update/delete the product"})
     }
     const productId = req.params.id;
@@ -115,7 +113,6 @@ exports.update = (req, res) => {
 
 exports.delete = (req, res) => {
     if(!req.allPermission){
-        console.log("hello");
         res.status(403).send({message:"Only superadmin is allowed to add/update/delete the product"})
     }
     const productId = req.params.id;

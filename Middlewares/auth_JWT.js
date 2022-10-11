@@ -24,6 +24,7 @@ verifyToken = (req,res,next) =>{
         })
         req.roles = eligibleRoles;
         req.allPermission = eligibleRoles.includes('superadmin');
+        req.isUser = eligibleRoles.includes('user');
         next();
     })
     

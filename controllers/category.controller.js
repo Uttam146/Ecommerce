@@ -3,7 +3,6 @@ const Category = db.Category;
 exports.create = function (req, res) {
     
     if(!req.allPermission){
-        console.log("hello");
         res.status(403).send({message:"Only superadmin is allowed to add/update/delete the cateory"})
     }
     const category = {
@@ -48,7 +47,6 @@ exports.getOne = (req, res) => {
 exports.update = (req, res) => {
 
     if(!req.allPermission){
-        console.log("hello");
         res.status(403).send({message:"Only superadmin is allowed to add/update/delete the cateory"})
     }
     const categoryId = req.params.id;
@@ -75,7 +73,6 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
 
     if(!req.allPermission){
-        console.log("hello");
         res.status(403).send({message:"Only superadmin is allowed to add/update/delete the cateory"})
     }
     const categoryId = req.params.id;
